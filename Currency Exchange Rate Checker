@@ -1,0 +1,43 @@
+import requests
+
+base_url = "https://api.apilayer.com/exchangerates_data/latest"
+
+api_key = "YOUR_API_KEY"
+
+def get_exchange_rates(base_currency, target_currency):
+    # Prepare the API request URL with parameters
+    params = {
+        "base": base_currency,
+        "symbols": target_currency,
+    }
+    
+    headers = {
+        "apikey": api_key,
+    }
+
+    response = requests.get(base_url, params=params, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        if target_currency in data["rates"]:
+            rate = data["rates"][target_currency]
+            return rate
+        else:
+            return None
+    else:
+        return None
+
+def main():
+    print("Welcome to the Currency Exchange Rate Checker!")
+    base_currency = input("Enter the base currency (e.g., USD): ")
+    target_currency = input("Enter the target currency (e.g., EUR): ")
+
+    rate = get_exchange_rates(base_currency, target_currency)
+    
+    if rate is not None:
+        print(f"1 {base_currency} is equal to {rate} {target_currency}")
+    else:
+        print("Exchange rate not found or an error occurred.")
+
+if __name__ == "__main__":
+    main()
